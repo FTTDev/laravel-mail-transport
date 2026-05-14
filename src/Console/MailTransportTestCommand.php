@@ -37,7 +37,7 @@ class MailTransportTestCommand extends Command
         }
 
         try {
-            $mailer->to($to)->sendNow(new MailTransportTestMail(now()->toDateTimeString()));
+            $mailer->to($to)->send(new MailTransportTestMail(now()->toDateTimeString()));
         } catch (\Throwable $e) {
             $this->error('Send failed: '.$e->getMessage());
             if ($this->output->isVerbose()) {
