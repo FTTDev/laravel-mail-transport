@@ -1,0 +1,39 @@
+{
+    "name": "fleet-tracking-technology/laravel-mail-transport",
+    "description": "Fleet Tracking Technology — Laravel Microsoft Graph mail transport + configurable resolver",
+    "keywords": [
+        "laravel",
+        "mail",
+        "microsoft-graph",
+        "entra",
+        "office365",
+        "smtp"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fleet Tracking Technology"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "symfony/http-client": "^7.4",
+        "symfony/microsoft-graph-mailer": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "FleetTrackingTechnology\\LaravelMailTransport\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "FleetTrackingTechnology\\LaravelMailTransport\\LaravelMailTransportServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
