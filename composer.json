@@ -33,6 +33,9 @@
             "providers": [
                 "FleetTrackingTechnology\\LaravelMailTransport\\LaravelMailTransportServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev"
         }
     },
     "minimum-stability": "stable",

@@ -20,7 +20,32 @@ In your Laravel app `composer.json`:
 
 Replace the URL with your real repo (HTTPS or `git@github.com:...`). Then run `composer update fleet-tracking-technology/laravel-mail-transport`.
 
+If your app has `"minimum-stability": "stable"` (Laravel default), Composer may refuse `dev-main` unless you allow dev for this package only:
+
+```json
+"require": {
+    "fleet-tracking-technology/laravel-mail-transport": "dev-main@dev"
+}
+```
+
+Or tag a release on GitHub (e.g. `v1.0.0`) and require a normal range:
+
+```json
+"require": {
+    "fleet-tracking-technology/laravel-mail-transport": "^1.0"
+}
+```
+
 Private repo: use a [GitHub deploy token / SSH key](https://getcomposer.org/doc/articles/authentication.md) so Composer can clone.
+
+## Troubleshooting: “Could not find a matching version” / stability
+
+That message almost always means **Composer has no source for the package**:
+
+1. **Not on Packagist** — this name is not published there yet. A bare `composer require fleet-tracking-technology/laravel-mail-transport` **without** a `repositories` entry will fail.
+2. **Add `repositories` first** — use `path` (monorepo) or `vcs` (GitHub) as in the sections above, then `composer update`, or `composer require "fleet-tracking-technology/laravel-mail-transport:dev-main@dev"` after the VCS repo is in `composer.json`.
+3. **Monorepo subfolder** — if the Git repo root is your whole app and `composer.json` for this library is only under `packages/...`, Composer’s `vcs` type **cannot** install that subfolder as a package. The GitHub repo for VCS install must have **`composer.json` at the repository root** (see “Publish this package to GitHub”).
+4. **Wrong branch** — default branch might be `master` not `main`; use `dev-master` or rename the branch to match your constraint.
 
 ## Install (path / monorepo)
 
