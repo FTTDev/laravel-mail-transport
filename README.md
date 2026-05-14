@@ -93,4 +93,8 @@ After runtime changes: `MailTransportApplier::applyFromContainer();` and `Mail::
 
 ## Requirements
 
-PHP 8.2+, Laravel 11/12, Entra app with **Application** permission **Mail.Send** + admin consent.
+- **PHP** 8.1+
+- **Laravel** 10 / 11 / 12 (uses Symfony Mailer 6+ already shipped with Laravel)
+- Microsoft Entra app with **Application** permission **Mail.Send** + admin consent
+
+Graph sending is implemented with `symfony/http-client` (no separate `symfony/microsoft-graph-mailer` package), so it stays compatible with Laravel 10’s Symfony 6 mail stack.

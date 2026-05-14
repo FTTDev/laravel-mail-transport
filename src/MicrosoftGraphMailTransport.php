@@ -3,12 +3,11 @@
 namespace FleetTrackingTechnology\LaravelMailTransport;
 
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\Mailer\Bridge\MicrosoftGraph\Transport\MicrosoftGraphTransportFactory;
-use Symfony\Component\Mailer\Transport\Dsn;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 
 final class MicrosoftGraphMailTransport
 {
-    public static function create(array $config): \Symfony\Component\Mailer\Transport\TransportInterface
+    public static function create(array $config): TransportInterface
     {
         foreach (['client_id', 'client_secret', 'tenant_id'] as $key) {
             if (empty($config[$key])) {
@@ -18,31 +17,24 @@ final class MicrosoftGraphMailTransport
             }
         }
 
-        $factory = new MicrosoftGraphTransportFactory(
-            null,
-            HttpClient::create($config['client'] ?? []),
+        $graphHost = trim((string) ($config['graph_endpoint'] ?? '')) !== ''
+            ? trim((string) $config['graph_endpoint'])
+            : 'graph.microsoft.com';
+
+        $authHost = trim((string) ($config['auth_endpoint'] ?? '')) !== ''
+            ? trim((string) $config['auth_endpoint'])
+            : 'login.microsoftonline.com';
+
+        $http = HttpClient::create($config['client'] ?? []);
+
+        return new NativeMicrosoftGraphTransport(
+            $graphHost,
+            $authHost,
+            (string) $config['tenant_id'],
+            (string) $config['client_id'],
+            (string) $config['client_secret'],
+            ! empty($config['no_save']),
+            $http,
         );
-
-        $host = trim((string) ($config['graph_endpoint'] ?? '')) !== ''
-            ? trim($config['graph_endpoint'])
-            : 'default';
-
-        $dsnString = sprintf(
-            'microsoftgraph+api://%s:%s@%s?tenantId=%s',
-            rawurlencode((string) $config['client_id']),
-            rawurlencode((string) $config['client_secret']),
-            $host,
-            rawurlencode((string) $config['tenant_id'])
-        );
-
-        if (! empty($config['auth_endpoint'])) {
-            $dsnString .= '&authEndpoint='.rawurlencode(trim((string) $config['auth_endpoint']));
-        }
-
-        if (! empty($config['no_save'])) {
-            $dsnString .= '&noSave=true';
-        }
-
-        return $factory->create(Dsn::fromString($dsnString));
     }
 }
